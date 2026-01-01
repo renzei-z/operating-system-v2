@@ -1,0 +1,63 @@
+#include <screen.h>
+#include <idt.h>
+#include <gdt.h>
+
+extern void outb(unsigned short port, unsigned short val);
+
+extern unsigned int _kernel_start, _kernel_end;
+
+// NOTE: This needs to be changed manually,
+// as we do not "link" with boot.asm, so we
+// can't just make the value global.
+static int loaded_sectors = 30;
+
+// TODO: Move this somewhere better?
+void remap_pic() {
+  // ICW1: Start initialization
+    outb(0x20, 0x11);
+    outb(0xA0, 0x11);
+
+    // ICW2: Set the offsets (Remap!)
+    // Master starts at 32 (0x20), Slave starts at 40 (0x28)
+    outb(0x21, 0x20); 
+    outb(0xA1, 0x28);
+
+    // ICW3: Tell them how they are wired together
+    outb(0x21, 0x04);
+    outb(0xA1, 0x02);
+
+    // ICW4: Give additional information about environment
+    outb(0x21, 0x01);
+    outb(0xA1, 0x01);
+
+    // Mask: Enable all interrupts (for now)
+    outb(0x21, 0x00);
+    outb(0xA1, 0x00);
+}
+
+void kmain() {
+  kclear();
+  kprints("[INFO] Loaded 30 sectors of kernel.\n");
+  kprints("[INFO] _kernel_start: ");
+  kprintx((unsigned int)&_kernel_start);
+  kprints("; _kernel_end: ");
+  kprintx((unsigned int)&_kernel_end);
+  kprintc('\n');
+  kprints("[INFO] Kernel Size: ");
+  kprintx(((unsigned int)&_kernel_end)-((unsigned int)&_kernel_start));
+  kprints("/");
+  kprintx((unsigned int)(loaded_sectors * 512));
+  kprintc('\n');
+  load_gdt();
+  kprints("[INFO] GDT loaded successfully.\n");
+  remap_pic();
+  load_idt();
+  kprints("[INFO] IDT loaded successfully.\n");
+
+  __asm__ volatile("sti");
+
+  kclear();
+  kprints("> ");
+  
+  while(1);
+}
