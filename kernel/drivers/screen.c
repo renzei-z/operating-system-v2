@@ -17,6 +17,17 @@ void update_cursor() {
   set_cursor(pos);
 }
 
+// TODO: VERY stupid implementation.
+// This will very easily buffer overflow
+// or delete stuff not inputted by the user.
+//
+// This is for TESTING PURPOSES ONLY.
+void backspace() {
+  pos -= 1;
+  video_mem[pos * 2] = ' ';
+  update_cursor();
+}
+
 void kprintc(char c) {
   if (c == '\n') {
     pos = (pos / 80 + 1) * 80;

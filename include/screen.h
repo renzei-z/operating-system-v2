@@ -11,4 +11,7 @@ void kprintc(char c);
 void kprints(char *s);
 void kprintx(unsigned int x);
 
+// -- TESTING ONLY --
+void backspace();
+
 #endif // KSCREEN_H_

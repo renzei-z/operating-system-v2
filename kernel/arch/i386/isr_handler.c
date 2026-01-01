@@ -35,6 +35,11 @@ void keyboard_callback() {
   uint8_t scancode = inb(0x60);
   //kprintx(scancode);
 
+  if (scancode == 0x0E) {
+    backspace();
+    return;
+  }
+  
   if (scancode & 0x80) {
 
   } else {
