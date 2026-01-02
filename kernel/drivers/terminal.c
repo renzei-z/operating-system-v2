@@ -34,11 +34,10 @@ void kprintc(char c) {
   if (c == '\n') {
     terminal.x = 0;
     terminal.y ++;
-    return;
+  } else {
+    put_char_at(c, terminal.color, terminal.x, terminal.y);
+    terminal.x++;
   }
-  
-  put_char_at(c, terminal.color, terminal.x, terminal.y);
-  terminal.x++;
   set_cursor(POS_TO_IDX(terminal.x, terminal.y));
 }
 
