@@ -3,11 +3,11 @@ QEMU = qemu-system-i386
 ASMFLAGS = -fbin
 LD=$(HOME)/opt/cross/bin/i686-elf-ld
 CC=$(HOME)/opt/cross/bin/i686-elf-gcc
-CFLAGS=-ffreestanding -m32 -fno-pie -fno-stack-protector -nostdlib -Iinclude
+CFLAGS=-Wall -Wextra -ffreestanding -m32 -fno-pie -fno-stack-protector -nostdlib -Iinclude
 LDFLAGS=-melf_i386 -T linker.ld
 
 CSOURCES=$(shell find kernel -name "*.c")
-OBJ=${CSOURCES:.c=.o} kernel/arch/i386/kernel_entry.o kernel/arch/i386/isr.o
+OBJ=${CSOURCES:.c=.o} kernel/arch/i386/boot/kernel_entry.o kernel/arch/i386/interrupt/isr.o kernel/arch/i386/io.o
 
 .PHONY: all clean run
 

@@ -7,24 +7,24 @@ _kernel_start:
 	jmp $
 
 ;; This should be extracted to its own file
-	global outb
-outb:
-	mov dx, [esp + 4]
-	mov al, [esp + 8]
-	out dx, al
-	ret
+;; 	global outb
+;; outb:
+;; 	mov dx, [esp + 4]
+;; 	mov al, [esp + 8]
+;; 	out dx, al
+;; 	ret
 
-	global inb
-inb:
-	push ebp
-	mov ebp, esp
-	xor eax, eax
-	mov dx, [esp + 8]
-	in al, dx
+;; 	global inb
+;; inb:
+;; 	push ebp
+;; 	mov ebp, esp
+;; 	xor eax, eax
+;; 	mov dx, [esp + 8]
+;; 	in al, dx
 
-	mov esp, ebp
-	pop ebp
-	ret
+;; 	mov esp, ebp
+;; 	pop ebp
+;; 	ret
 
 	global idt_load
 	extern idtptr

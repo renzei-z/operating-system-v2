@@ -1,10 +1,6 @@
-#include <screen.h>
+#include <io.h>
+#include <terminal.h>
 #include <types.h>
-
-extern uint8_t inb(unsigned short port);
-extern void outb(unsigned short port, unsigned short val);
-
-static int count = 0;
 
 struct regs {
   uint32_t ds;
@@ -36,7 +32,7 @@ void keyboard_callback() {
   //kprintx(scancode);
 
   if (scancode == 0x0E) {
-    backspace();
+    /* backspace(); */
     return;
   }
   

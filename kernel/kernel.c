@@ -1,8 +1,7 @@
-#include <screen.h>
+#include <terminal.h>
 #include <idt.h>
+#include <io.h>
 #include <gdt.h>
-
-extern void outb(unsigned short port, unsigned short val);
 
 extern unsigned int _kernel_start, _kernel_end;
 
@@ -36,28 +35,33 @@ void remap_pic() {
 }
 
 void kmain() {
+  terminal_init();
+  
   kclear();
-  kprints("[INFO] Loaded 30 sectors of kernel.\n");
-  kprints("[INFO] _kernel_start: ");
-  kprintx((unsigned int)&_kernel_start);
-  kprints("; _kernel_end: ");
-  kprintx((unsigned int)&_kernel_end);
-  kprintc('\n');
-  kprints("[INFO] Kernel Size: ");
-  kprintx(((unsigned int)&_kernel_end)-((unsigned int)&_kernel_start));
-  kprints("/");
-  kprintx((unsigned int)(loaded_sectors * 512));
-  kprintc('\n');
+
+  kprintf("[INFO] Loaded 30 sectors of kernel.\n");
+
+  kprintf("[INFO] _kernel_start: %X; _kernel_end: %X\n",
+	  (uint32_t)&_kernel_start,
+	  (uint32_t)&_kernel_end);
+  
+  kprintf("[INFO] Kernel Size: %X/%X\n",
+	  ((uint32_t)&_kernel_end)-((unsigned int)&_kernel_start),
+	  (uint32_t)(loaded_sectors * 512));
+  
   load_gdt();
-  kprints("[INFO] GDT loaded successfully.\n");
+  
+  kprintf("[INFO] GDT loaded successfully.\n");
+
   remap_pic();
   load_idt();
-  kprints("[INFO] IDT loaded successfully.\n");
 
+  kprintf("[INFO] IDT loaded successfully.\n");
+  
   __asm__ volatile("sti");
 
-  kclear();
-  kprints("> ");
+  /* kclear(); */
+  kprintf("> ");
   
   while(1);
 }
